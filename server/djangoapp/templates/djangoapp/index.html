@@ -27,20 +27,20 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                {% if authenticated %}
+                {% if user.is_authenticated %}
                 <li>
-                    <a class="btn btn-link" href="#">User: {{ userName }}</a>
-                    <a class="btn btn-link" href="#">Logout</a>
+                    <a class="btn btn-link" href="#">User: {{ user.username }}</a>
+                    <a class="btn btn-link" href="logout">Logout</a>
                 </li>
                 {% else %}
                 <li>
                     <form action="{% url 'djangoapp:login' %}"  method="post">
                         {% csrf_token %}
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Username" name="username" >
-                            <input type="password" class="form-control" placeholder="Password" name="psw" >
-                            <button class="btn btn-primary" type="submit">Login</button>
-                            <a class="btn btn-link" href="#">Sign Up</a>
+                            <input type="text" class="form-control" placeholder="Username" name="username" required>
+                            <input type="password" class="form-control" placeholder="Password" name="psw" required>
+                            <button class="btn btn-primary" type="submit">Login: {{ request.user.username }}</button>
+                            <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
                         </div>
                     </form>
                 </li>
