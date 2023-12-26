@@ -49,7 +49,15 @@
         </div>
     </nav>
     <!--Add a dealer table here -->
-
+    {% if dealership_list %}
+    <div>
+        <ul>
+            {% for dealer in dealership_list %}
+            <li>{{dealer}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     </body>
 
 </html>
