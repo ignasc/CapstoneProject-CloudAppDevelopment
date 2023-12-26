@@ -113,10 +113,16 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
+# NOTE: the method is working, just need to sort out the logic so that only one dealer details will be sent to index.html template
 def get_dealer_details(request, dealer_id):
+    print("Dealer ID: ", dealer_id)
     context = {}
     if request.method == "GET":
-        return render(request, 'https://ignuic-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get', context)
+        try:
+            return render(request, 'djangoapp/index.html', context)
+        except:
+            return HttpResponse ("Cannot find dealer with that ID")
+        #https://ignuic-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get
 
 
 # Create a `add_review` view to submit a review
