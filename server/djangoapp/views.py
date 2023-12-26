@@ -99,8 +99,11 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
+def get_dealer_details(request, dealer_id):
+    context = {}
+    if request.method == "GET":
+        return render(request, 'https://ignuic-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get', context)
+
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
