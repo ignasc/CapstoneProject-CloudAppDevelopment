@@ -121,8 +121,11 @@ def get_dealer_details(request, dealer_id):
         url = "https://ignuic-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
         dealership_details = get_dealer_by_id_from_cf(url, dealerId = dealer_id)
         try:
-            return HttpResponse(dealership_details)
-            #return render(request, 'djangoapp/index.html', context)
+            context = {
+                "dealership_list": dealership_details,
+            }
+            #return HttpResponse(dealership_details)
+            return render(request, 'djangoapp/index.html', context)
         except:
             return HttpResponse ("Cannot find dealer with that ID")
         #https://ignuic-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get
