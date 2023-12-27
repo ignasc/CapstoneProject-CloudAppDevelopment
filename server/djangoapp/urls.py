@@ -8,6 +8,7 @@ urlpatterns = [
     # route is a string contains a URL pattern
     # view refers to the view function
     # name the URL
+    path(route='debug', view=views.debug, name='debug'),# DELETE ME IN THE END
     path(route='dealership/<int:dealer_id>/', view=views.get_dealer_details, name='index'),
 
     # path for about view

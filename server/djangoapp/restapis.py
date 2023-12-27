@@ -23,6 +23,23 @@ def get_request(url, **kwargs):
     json_data = json.loads(response.text)
     return json_data
 
+def get_request_debug(url, **kwargs):
+    # This method will replace the original get_request method once sorted out.
+    # This method is not returning one dealer when supplied with optional parameter (ID)
+    print(kwargs)
+    print("GET from {} ".format(url))
+    try:
+        # Call get method of requests library with URL and parameters
+        response = requests.get(url, headers={'Content-Type': 'application/json'},
+                                    params=kwargs)
+    except:
+        # If any error occurs
+        print("Network exception occurred")
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
+
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
