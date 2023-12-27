@@ -83,7 +83,8 @@ def get_dealer_by_id_from_cf(url, dealerId):
                 results.append(dealer_obj)
     
     if len(results) == 0:
-        return ("Cannot find dealership with ID " + str(dealerId))
+        print("Cannot find dealership with ID " + str(dealerId))
+        return False
     else:
         return results
     
