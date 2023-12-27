@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 #from .models import CarDealer
-from .restapis import get_dealers_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -118,8 +118,11 @@ def get_dealer_details(request, dealer_id):
     print("Dealer ID: ", dealer_id)
     context = {}
     if request.method == "GET":
+        url = "https://ignuic-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+        dealership_details = get_dealer_by_id_from_cf(url, dealerId = dealer_id)
         try:
-            return render(request, 'djangoapp/index.html', context)
+            return HttpResponse(dealership_details)
+            #return render(request, 'djangoapp/index.html', context)
         except:
             return HttpResponse ("Cannot find dealer with that ID")
         #https://ignuic-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get
