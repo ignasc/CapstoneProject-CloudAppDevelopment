@@ -43,6 +43,7 @@ def get_dealers_from_cf(url, **kwargs):
         for dealer in dealers:
             print("PRINTING ONE ENTRY AT A TIME")
             print(dealer)
+            print("End of entry")
             # Get its content in `doc` object
             dealer_doc = dealer#["doc"]
             # Create a CarDealer object with values in `doc` object
