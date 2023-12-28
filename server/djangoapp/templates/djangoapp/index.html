@@ -57,6 +57,16 @@
             {% endfor %}
         </ul>
     </div>
+    {% elif dealership_review_list %}
+    <div>
+        <h1>Reviews for {{"Add dealership name"}}</h1>
+        <p>Modify index.html to generate a dealership review list</p>
+        <ul>
+            {% for entry in dealership_review_list %}
+            <li>Review entry: {{entry}} </li>
+            {% endfor %}
+        </ul>
+    </div>
     {% else %}
     <div>
         <p>No dealer list available (might be issues retrieving the list)</p>

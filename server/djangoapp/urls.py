@@ -10,6 +10,7 @@ urlpatterns = [
     # name the URL
     path(route='debug', view=views.debug, name='debug'),# DELETE ME IN THE END
     path(route='dealership/<int:dealer_id>/', view=views.get_dealer_details, name='index'),
+    path(route='dealerreviews/<int:dealer_id>/', view=views.get_dealer_details, name='dealer_details'),
 
     # path for about view
     path(route='about', view=views.about, name='about'),

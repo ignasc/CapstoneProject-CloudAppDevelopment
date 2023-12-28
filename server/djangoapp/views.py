@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 #from .models import CarDealer
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf
 from .restapis import get_request_debug# DELETE ME IN THE END
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -22,7 +22,8 @@ URL = "https://ignuic-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.co
 #DEBUG VIEW
 def debug(request):# DELETE ME IN THE END
     context = {}
-    results = get_request_debug(URL, dealer_id = 2)
+    debug_dealer_id = 6
+    results = get_request_debug(URL, id = debug_dealer_id)
     if request.method == "GET":
         return HttpResponse(results)
 
@@ -109,12 +110,10 @@ def registration_request(request):
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
-        #url = "https://ignuic-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(URL)
         # Concat all dealer's short name
         #dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
-        print(dealerships)
         context = {
             "dealership_list": dealerships,
         }
@@ -122,22 +121,22 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-# NOTE: the method is working, just need to sort out the logic so that only one dealer details will be sent to index.html template
 def get_dealer_details(request, dealer_id):
     print("Dealer ID: ", dealer_id)
+    url = "https://ignuic-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews?id=15"
     context = {}
     if request.method == "GET":
-        #url = "https://ignuic-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
         dealership_details = get_dealer_by_id_from_cf(URL, dealerId = dealer_id)
+        dealership_reviews = get_dealer_reviews_from_cf(url, dealerId = dealership_details[0].id)
         try:
             context = {
-                "dealership_list": dealership_details,
+                "dealership_review_list": dealership_reviews,
             }
-            #return HttpResponse(dealership_details)
+            print("FORMATED DEALERSHIP REVIEW LIST")
+            print(dealership_reviews)
             return render(request, 'djangoapp/index.html', context)
         except:
             return HttpResponse ("Cannot find dealer with that ID")
-        #https://ignuic-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get
 
 
 # Create a `add_review` view to submit a review

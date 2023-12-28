@@ -81,5 +81,7 @@ class DealerReview:
         self.car_make = car_make
         self.car_model = car_model
         self.car_year = car_year
+        self.sentiment = sentiment
+        self.id = id
     def __str__(self):
-        return "This is the review entry of a dealer " + self.dealership
+        return "This is the review entry of a dealer " + self.name
