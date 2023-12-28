@@ -63,7 +63,7 @@
         <p>Modify index.html to generate a dealership review list</p>
         <ul>
             {% for entry in dealership_review_list %}
-            <li>Review entry: {{entry}} </li>
+            <li>Review entry for {{entry.name}}: Sentiment: {{entry.sentiment}} </li>
             {% endfor %}
         </ul>
     </div>

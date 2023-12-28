@@ -9,28 +9,20 @@ from requests.auth import HTTPBasicAuth
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
 #                                     auth=HTTPBasicAuth('apikey', api_key))
 def get_request(url, **kwargs):
-    print(kwargs)
+    api_key = kwargs.get("api_key")# Retrieve api key if it was supplied
     print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs)
-    except:
-        # If any error occurs
-        print("Network exception occurred")
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
-    json_data = json.loads(response.text)
-    return json_data
-
-def get_request_debug(url, **kwargs):
-    # This method will replace the original get_request method once sorted out.
-    # This method is not returning one dealer when supplied with optional parameter (ID)
-    print(kwargs)
-    print("GET from {} ".format(url))
-    try:
-        # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
+        if api_key:
+            params = dict()
+            params["text"] = kwargs["text"]
+            params["version"] = kwargs["version"]
+            params["features"] = kwargs["features"]
+            params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
+                                    params=kwargs, auth=HTTPBasicAuth('apikey', api_key))
+        else:
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs)
     except:
         # If any error occurs
@@ -99,8 +91,6 @@ def get_dealer_reviews_from_cf(url, dealerId):
     results = []
     # Call get_request with a URL parameter
     json_result = get_request(url, id = dealerId)
-    print("GET_DEALER_REVIEWS_FROM_CF")
-    print(json_result)
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result#["rows"]
@@ -119,7 +109,8 @@ def get_dealer_reviews_from_cf(url, dealerId):
             car_make=dealer_doc["car_make"] if dealer_doc["purchase"] else "N/A",
             car_model=dealer_doc["car_model"] if dealer_doc["purchase"] else "N/A",
             car_year=dealer_doc["car_year"] if dealer_doc["purchase"] else "N/A",
-            sentiment="implement Watson NLU",
+            #sentiment="implement Watson NLU",
+            sentiment=analyze_review_sentiments(dealer_doc["review"]),
             id=dealer_doc["id"])
             results.append(dealer_obj)
     print(results)
@@ -129,6 +120,12 @@ def get_dealer_reviews_from_cf(url, dealerId):
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
+def analyze_review_sentiments(review_text):
+    api_key = "BFjGXOITflZAsVBxjrQE316cMaUwoA1A6PNFz2hXaISQ"
+    url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/385cb7f7-1bcb-4159-8547-557de27da4cf"
 
+    json_result = get_request(url, apikey = api_key)
+    result = "This should be sentiment value from watson NLU (not implemented in analyze_review_sentiments() method"
+    return result
 
 

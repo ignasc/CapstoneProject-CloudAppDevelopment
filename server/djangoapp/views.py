@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 #from .models import CarDealer
 from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf
-from .restapis import get_request_debug# DELETE ME IN THE END
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -19,15 +18,6 @@ logger = logging.getLogger(__name__)
 URL = "https://ignuic-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
 
 # Create your views here.
-#DEBUG VIEW
-def debug(request):# DELETE ME IN THE END
-    context = {}
-    debug_dealer_id = 6
-    results = get_request_debug(URL, id = debug_dealer_id)
-    if request.method == "GET":
-        return HttpResponse(results)
-
-
 # Create an `about` view to render a static about page
 def about(request):
     context = {}
