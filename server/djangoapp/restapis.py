@@ -142,10 +142,10 @@ def analyze_review_sentiments(review_text):
         natural_language_understanding.set_service_url(url)
 
         response = natural_language_understanding.analyze(
-            text=review_text,
-            features=Features(sentiment=SentimentOptions())).get_result()
+            text=review_text,# Text to be analysed
+            features=Features(sentiment=SentimentOptions())).get_result()# Setting up options (using only sentiment feature, that returns overall score for the review text)
 
-        print(json.dumps(response, indent=2))
+        # print(json.dumps(response, indent=2))
 
     json_result = get_request(url, apikey = api_key_for_review_post)
     result = 'Review: ' + review_text + " Sentiment: " + response['sentiment']['document']['label']

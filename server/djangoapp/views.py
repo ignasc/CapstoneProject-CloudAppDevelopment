@@ -114,6 +114,7 @@ def get_dealerships(request):
 def get_dealer_details(request, dealer_id):
     print("Dealer ID: ", dealer_id)
     url = "https://ignuic-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews?id=13"
+    # The above url should be changed to accept any ID instead.
     context = {}
     if request.method == "GET":
         dealership_details = get_dealer_by_id_from_cf(URL, dealerId = dealer_id)
