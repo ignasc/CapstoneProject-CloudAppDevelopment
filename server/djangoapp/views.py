@@ -140,14 +140,15 @@ def add_review(request, dealer_id = 15):
         review = {
             "id": 1114,
             "name": "DEBUG DEALERSHIP",
-            "dealership": 15,
+            "dealership": dealer_id,
             "review": "Great service! Not really, just posting test review",
             "purchase": False,
             "another": "field",
             "purchase_date": "02/16/2021",
             "car_make": "Audi",
             "car_model": "Car",
-            "car_year": 2021
+            "car_year": 2021,
+            "time": datetime.utcnow().isoformat()
         }
         # Prepare payload with review details
         json_payload = {
