@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 #from .models import CarDealer
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -132,18 +132,32 @@ def get_dealer_details(request, dealer_id):
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
-def add_review(request, dealer_id = -1):
+def add_review(request, dealer_id = 15):
     sessionid = request.COOKIES.get('sessionid')
+    url_post_review = "https://ignuic-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
     if sessionid != None:
         print("User is authenticated")
         review = {
-            "time": datetime.utcnow().isoformat(),
-            "dealership": dealer_id,
-            "review": "This is a great car dealer. Also this is a review to test post review request."
+            "id": 1114,
+            "name": "DEBUG DEALERSHIP",
+            "dealership": 15,
+            "review": "Great service! Not really, just posting test review",
+            "purchase": False,
+            "another": "field",
+            "purchase_date": "02/16/2021",
+            "car_make": "Audi",
+            "car_model": "Car",
+            "car_year": 2021
         }
+        # Prepare payload with review details
+        json_payload = {
+            "review": review
+        }
+        # Call post review method to post the review
+        result = post_request(url_post_review, json_payload, id = dealer_id)
     else:
-        print("User is not authenticated")
-    return HttpResponse("add_review method called. SessionID: " + str(sessionid))
+        print("User is not authenticated")  
+    return HttpResponse("add_review method called. SessionID: " + str(sessionid) + "\n Result of post request: " + str(result.status_code))
 
 
 def debug(request):# DELETE ME

@@ -1,3 +1,4 @@
+import os
 import requests
 import json
 # import related models here
@@ -36,8 +37,8 @@ def get_request(url, **kwargs):
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 def post_request(url, json_payload, **kwargs):
-    #result = requests.post(url, params=kwargs, json=json_payload)
-    pass
+    result = requests.post(url, params=kwargs, json=json_payload["review"])
+    return result
 
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
@@ -124,10 +125,11 @@ def get_dealer_reviews_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
 def analyze_review_sentiments(review_text):
-    api_key = "BFjGXOITflZAsVBxjrQE316cMaUwoA1A6PNFz2hXaISQ"
+    key = "API_KEY_REVIEW_POST"
+    api_key_for_review_post = os.getenv(key, default = None)
     url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/385cb7f7-1bcb-4159-8547-557de27da4cf"
 
-    json_result = get_request(url, apikey = api_key)
+    json_result = get_request(url, apikey = api_key_for_review_post)
     result = "This should be sentiment value from watson NLU (not implemented in analyze_review_sentiments() method"
     return result
 
