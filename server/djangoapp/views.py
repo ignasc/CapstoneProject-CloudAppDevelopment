@@ -132,4 +132,19 @@ def get_dealer_details(request, dealer_id):
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
+def add_review(request, dealer_id = -1):
+    sessionid = request.COOKIES.get('sessionid')
+    if sessionid != None:
+        print("User is authenticated")
+        review = {
+            "time": datetime.utcnow().isoformat(),
+            "dealership": dealer_id,
+            "review": "This is a great car dealer. Also this is a review to test post review request."
+        }
+    else:
+        print("User is not authenticated")
+    return HttpResponse("add_review method called. SessionID: " + str(sessionid))
 
+
+def debug(request):# DELETE ME
+    return HttpResponse("Debug")
