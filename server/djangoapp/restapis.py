@@ -5,6 +5,12 @@ import json
 from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 
+# Imports for IBM Watson NLU
+import json
+from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_watson.natural_language_understanding_v1 import Features, SentimentOptions
+
 
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
@@ -129,8 +135,20 @@ def analyze_review_sentiments(review_text):
     api_key_for_review_post = os.getenv(key, default = None)
     url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/385cb7f7-1bcb-4159-8547-557de27da4cf"
 
+    if api_key_for_review_post != None:
+        authenticator = IAMAuthenticator(api_key_for_review_post)
+        natural_language_understanding = NaturalLanguageUnderstandingV1(version='2022-04-07', authenticator=authenticator)
+
+        natural_language_understanding.set_service_url(url)
+
+        response = natural_language_understanding.analyze(
+            text=review_text,
+            features=Features(sentiment=SentimentOptions())).get_result()
+
+        print(json.dumps(response, indent=2))
+
     json_result = get_request(url, apikey = api_key_for_review_post)
-    result = "This should be sentiment value from watson NLU (not implemented in analyze_review_sentiments() method"
+    result = 'Review: ' + review_text + " Sentiment: " + response['sentiment']['document']['label']
     return result
 
 
