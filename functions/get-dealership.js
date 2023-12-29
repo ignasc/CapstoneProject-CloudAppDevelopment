@@ -44,7 +44,7 @@ app.get('/dealerships/get', (req, res) => {
 
     const queryOptions = {
         selector,
-        limit: 10, // Limit the number of documents returned to 10
+        limit: 16, // Limit the number of documents returned to 16
     };
 
     db.find(queryOptions, (err, body) => {

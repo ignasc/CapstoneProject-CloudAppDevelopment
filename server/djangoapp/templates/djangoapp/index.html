@@ -48,34 +48,27 @@
                 </ul>
             </div>
         </nav>
-        <!--Add a dealer table here 
-        {% if dealership_list %}
+        
+        {% if dealership_review_list %}
         <div>
-            <ul>
-                {% for dealer in dealership_list %}
-                <li>{{dealer}}</li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% elif dealership_review_list %}
-        <div>
-            <h1>Reviews for selected dealership</h1>
-            <p>Modify index.html to generate a dealership review list</p>
+            <h2>Reviews for selected dealership</h2>
+            <a href="{% url 'djangoapp:index' %}">Go back to dealership list</a>
+            <br>
+            <br>
             <ul>
                 {% for entry in dealership_review_list %}
                 <li>Review entry for {{entry.name}}: Sentiment: {{entry.sentiment}} </li>
                 {% endfor %}
             </ul>
         </div>
-        {% else %}
-        <div>
-            <p>No dealer list available (might be issues retrieving the list)</p>
-        </div>
-        {% endif %}-->
+
+        {% endif %}
+
+        {% if dealership_list %}
         <br>
         <h2>List of all dealerships</h2>
         <br>
-        <table class="table table-striped" id="table">
+        <table class="table table-striped" id="table" data-filter-control="true">
             <thead>
                 <tr>
                     <th data-field="id">ID</th>
@@ -83,7 +76,7 @@
                     <th data-field="city">City</th>
                     <th data-field="address">Address</th>
                     <th data-field="zip">Zip Code</th>
-                    <th data-field="state">State</th>
+                    <th data-field="state" data-filter-control="select">State</th>
                 </tr>
             </thead>
             <tbody>
@@ -99,6 +92,13 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </body>
+<!-- JS code to enable column filtering  -->
+    <script> 
+        $(function() {
+          $('#table').bootstrapTable()
+        })
+      </script>
 
 </html>

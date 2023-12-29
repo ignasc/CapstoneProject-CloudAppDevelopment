@@ -113,21 +113,22 @@ def get_dealerships(request):
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
     print("Dealer ID: ", dealer_id)
-    url = "https://ignuic-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews?id=13"
-    # The above url should be changed to accept any ID instead.
+    url = "https://ignuic-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews?id="
     context = {}
     if request.method == "GET":
         dealership_details = get_dealer_by_id_from_cf(URL, dealerId = dealer_id)
-        dealership_reviews = get_dealer_reviews_from_cf(url, dealerId = dealership_details[0].id)
+        dealership_reviews = get_dealer_reviews_from_cf(
+            url + str(dealer_id),# Adding dealer ID to the end of url
+            dealerId = dealer_id)#dealership_details[0].id)
         try:
             context = {
                 "dealership_review_list": dealership_reviews,
+                "dealership_name": dealership_details[0].full_name,
             }
-            print("FORMATED DEALERSHIP REVIEW LIST")
-            print(dealership_reviews)
-            return render(request, 'djangoapp/index.html', context)
-        except:
-            return HttpResponse ("Cannot find dealer with that ID")
+            return render(request, 'djangoapp/dealer_details.html', context)
+        except Exception as error:
+            print(error)
+            return HttpResponse ("There was an error in get_dealer_details method")
 
 
 # Create a `add_review` view to submit a review
@@ -136,6 +137,9 @@ def get_dealer_details(request, dealer_id):
 def add_review(request, dealer_id = 15):
     sessionid = request.COOKIES.get('sessionid')
     url_post_review = "https://ignuic-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
+    
+    return HttpResponse("add_review method to be implemented")
+    # Line above blocks further code execution until it is properly implemented using a submit form
     if sessionid != None:
         print("User is authenticated")
         review = {

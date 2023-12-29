@@ -134,7 +134,7 @@ def analyze_review_sentiments(review_text):
     key = "API_KEY_REVIEW_POST"
     api_key_for_review_post = os.getenv(key, default = None)
     url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/385cb7f7-1bcb-4159-8547-557de27da4cf"
-
+    
     if api_key_for_review_post != None:
         authenticator = IAMAuthenticator(api_key_for_review_post)
         natural_language_understanding = NaturalLanguageUnderstandingV1(version='2022-04-07', authenticator=authenticator)
@@ -146,9 +146,11 @@ def analyze_review_sentiments(review_text):
             features=Features(sentiment=SentimentOptions())).get_result()# Setting up options (using only sentiment feature, that returns overall score for the review text)
 
         # print(json.dumps(response, indent=2))
-
-    json_result = get_request(url, apikey = api_key_for_review_post)
-    result = 'Review: ' + review_text + " Sentiment: " + response['sentiment']['document']['label']
-    return result
+        result = response['sentiment']['document']['label']
+        return result
+    else:
+        # json_result = get_request(url, apikey = api_key_for_review_post)
+        result = "N/A"
+        return result
 
 
