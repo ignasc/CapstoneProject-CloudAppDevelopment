@@ -15,63 +15,90 @@
 
     <body>
     <!--Add a nav bar here -->
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Dealership Reviews</a>
+        <nav class="navbar navbar-light bg-light">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Dealership Reviews</a>
+                </div>
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a class="btn btn-link" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+                        <a class="btn btn-link" href="{% url 'djangoapp:about' %}">About Us</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a class="btn btn-link" href="#">User: {{ user.username }}</a>
+                        <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <form action="{% url 'djangoapp:login' %}"  method="post">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Username" name="username" required>
+                                <input type="password" class="form-control" placeholder="Password" name="psw" required>
+                                <button class="btn btn-primary" type="submit">Login: {{ request.user.username }}</button>
+                                <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                            </div>
+                        </form>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
-            <ul class="nav navbar-nav navbar-left">
-                <li>
-                    <a class="btn btn-link" href="{% url 'djangoapp:contact' %}">Contact Us</a>
-                    <a class="btn btn-link" href="{% url 'djangoapp:about' %}">About Us</a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if user.is_authenticated %}
-                <li>
-                    <a class="btn btn-link" href="#">User: {{ user.username }}</a>
-                    <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
-                </li>
-                {% else %}
-                <li>
-                    <form action="{% url 'djangoapp:login' %}"  method="post">
-                        {% csrf_token %}
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Username" name="username" required>
-                            <input type="password" class="form-control" placeholder="Password" name="psw" required>
-                            <button class="btn btn-primary" type="submit">Login: {{ request.user.username }}</button>
-                            <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
-                        </div>
-                    </form>
-                </li>
-                {% endif %}
+        </nav>
+        <!--Add a dealer table here 
+        {% if dealership_list %}
+        <div>
+            <ul>
+                {% for dealer in dealership_list %}
+                <li>{{dealer}}</li>
+                {% endfor %}
             </ul>
         </div>
-    </nav>
-    <!--Add a dealer table here -->
-    {% if dealership_list %}
-    <div>
-        <ul>
-            {% for dealer in dealership_list %}
-            <li>{{dealer}}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% elif dealership_review_list %}
-    <div>
-        <h1>Reviews for selected dealership</h1>
-        <p>Modify index.html to generate a dealership review list</p>
-        <ul>
-            {% for entry in dealership_review_list %}
-            <li>Review entry for {{entry.name}}: Sentiment: {{entry.sentiment}} </li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% else %}
-    <div>
-        <p>No dealer list available (might be issues retrieving the list)</p>
-    </div>
-    {% endif %}
+        {% elif dealership_review_list %}
+        <div>
+            <h1>Reviews for selected dealership</h1>
+            <p>Modify index.html to generate a dealership review list</p>
+            <ul>
+                {% for entry in dealership_review_list %}
+                <li>Review entry for {{entry.name}}: Sentiment: {{entry.sentiment}} </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <div>
+            <p>No dealer list available (might be issues retrieving the list)</p>
+        </div>
+        {% endif %}-->
+        <br>
+        <h2>List of all dealerships</h2>
+        <br>
+        <table class="table table-striped" id="table">
+            <thead>
+                <tr>
+                    <th data-field="id">ID</th>
+                    <th data-field="name">Name</th>
+                    <th data-field="city">City</th>
+                    <th data-field="address">Address</th>
+                    <th data-field="zip">Zip Code</th>
+                    <th data-field="state">State</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dealer in dealership_list %}
+                    <tr>
+                        <th scope="row">{{dealer.id}}</th>
+                        <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
+                        <td>{{dealer.city}}</td>
+                        <td>{{dealer.address}}</td>
+                        <td>{{dealer.zip}}</td>
+                        <td>{{dealer.st}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </body>
 
 </html>
