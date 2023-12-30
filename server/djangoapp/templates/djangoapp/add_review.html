@@ -12,5 +12,42 @@
 </head>
     <body>
     <!--Add review form here -->
+    <form action="{% url 'djangoapp:add_review' dealer_id %}" method="post">
+        <div class="container">
+          <h1>Sign Up</h1>
+          <hr>
+
+            <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
+
+
+            <!-- User name input -->
+            <div class="form-outline mb-4">
+                <input type="text" id="username" class="form-control" name="username" required/>
+                <label class="form-label" for="username">User Name</label>
+            </div>
+
+            <!-- First name input -->
+            <div class="form-outline mb-4">
+                <input type="text" id="firstname" class="form-control" name="firstname" required/>
+                <label class="form-label" for="firstname">First Name</label>
+            </div>
+
+            <!-- Last name input -->
+            <div class="form-outline mb-4">
+                <input type="text" id="lastname" class="form-control" name="lastname" required/>
+                <label class="form-label" for="lastname">Last Name</label>
+            </div>
+        
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <input type="password" id="psw" class="form-control" name="psw" required/>
+                <label class="form-label" for="psw">Password</label>
+            </div>
+          <div>
+              {% csrf_token %}
+              <button class="button" type="submit">Sign Up</button>
+          </div>
+        </div>
+      </form>
     </body>
 </html>

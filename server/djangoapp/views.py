@@ -126,6 +126,7 @@ def get_dealer_details(request, dealer_id):
             context = {
                 "dealership_review_list": dealership_reviews,
                 "dealership_name": dealership_details[0].full_name,
+                "dealer_id": dealer_id
             }
             return render(request, 'djangoapp/dealer_details.html', context)
         except Exception as error:
@@ -136,11 +137,13 @@ def get_dealer_details(request, dealer_id):
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
-def add_review(request, dealer_id = 15):
+def add_review(request, dealer_id):
     sessionid = request.COOKIES.get('sessionid')
-    
-    
-    return HttpResponse("add_review method to be implemented")
+    context = {
+        "dealer_id": dealer_id,
+    }
+    return render(request, 'djangoapp/add_review.html', context)
+    #return HttpResponse("add_review method to be implemented")
     # Line above blocks further code execution until it is properly implemented using a submit form
     if sessionid != None:
         print("User is authenticated")
