@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-#from .models import CarDealer
+from .models import CarModel
 from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -139,14 +139,36 @@ def get_dealer_details(request, dealer_id):
 # ...
 def add_review(request, dealer_id):
     sessionid = request.COOKIES.get('sessionid')
-    context = {
-        "dealer_id": dealer_id,
-    }
-    return render(request, 'djangoapp/add_review.html', context)
+
+    if sessionid != None:
+
+        all_car_models = CarModel.objects.all()
+        print("Printing out all car models from DB")
+        print(all_car_models[0].car_model)
+        # NEXT STEP: generate car model list and add <select> tag in add_review.html file
+
+        if request.method == "GET":
+
+            dealership_details = get_dealer_by_id_from_cf(URL_DEALER_LIST, dealerId = dealer_id)
+            context = {
+            "dealer_id": dealer_id,
+            "dealership_name": dealership_details[0].full_name,
+            }
+            return render(request, 'djangoapp/add_review.html', context)
+
+        if request.method == "POST":
+            return HttpResponse("add_review POST request")
+
+    else:
+        print("User is not authenticated")  
+    return HttpResponse("add_review method called. SessionID: " + str(sessionid) + "\n Result of post request: " + str(result.status_code))
+
+
+    
     #return HttpResponse("add_review method to be implemented")
     # Line above blocks further code execution until it is properly implemented using a submit form
     if sessionid != None:
-        print("User is authenticated")
+        #print("User is authenticated")
         review = {
             "id": 1114,
             "name": "DEBUG DEALERSHIP",
