@@ -15,7 +15,9 @@ import json
 logger = logging.getLogger(__name__)
 
 # CONSTANTS
-URL = "https://ignuic-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+URL_DEALER_LIST = "https://ignuic-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+URL_DEALER_DETAILS = "https://ignuic-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews"
+URL_POST_REVIEW = "https://ignuic-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
 
 # Create your views here.
 # Create an `about` view to render a static about page
@@ -101,7 +103,7 @@ def get_dealerships(request):
     context = {}
     if request.method == "GET":
         # Get dealers from the URL
-        dealerships = get_dealers_from_cf(URL)
+        dealerships = get_dealers_from_cf(URL_DEALER_LIST)
         # Concat all dealer's short name
         #dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         context = {
@@ -113,12 +115,12 @@ def get_dealerships(request):
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
     print("Dealer ID: ", dealer_id)
-    url = "https://ignuic-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews?id="
+    
     context = {}
     if request.method == "GET":
-        dealership_details = get_dealer_by_id_from_cf(URL, dealerId = dealer_id)
+        dealership_details = get_dealer_by_id_from_cf(URL_DEALER_LIST, dealerId = dealer_id)
         dealership_reviews = get_dealer_reviews_from_cf(
-            url + str(dealer_id),# Adding dealer ID to the end of url
+            URL_DEALER_DETAILS + "?id=" + str(dealer_id),# Adding dealer ID to the end of url
             dealerId = dealer_id)#dealership_details[0].id)
         try:
             context = {
@@ -136,7 +138,7 @@ def get_dealer_details(request, dealer_id):
 # ...
 def add_review(request, dealer_id = 15):
     sessionid = request.COOKIES.get('sessionid')
-    url_post_review = "https://ignuic-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
+    
     
     return HttpResponse("add_review method to be implemented")
     # Line above blocks further code execution until it is properly implemented using a submit form
@@ -160,7 +162,7 @@ def add_review(request, dealer_id = 15):
             "review": review
         }
         # Call post review method to post the review
-        result = post_request(url_post_review, json_payload, id = dealer_id)
+        result = post_request(URL_POST_REVIEW, json_payload, id = dealer_id)
     else:
         print("User is not authenticated")  
     return HttpResponse("add_review method called. SessionID: " + str(sessionid) + "\n Result of post request: " + str(result.status_code))
