@@ -164,65 +164,40 @@ def add_review(request, dealer_id):
             return render(request, 'djangoapp/add_review.html', context)
 
         if request.method == "POST":
-            jayson_payload = {
-            "dealer_id": dealer_id,
-            "name": dealership_details[0].full_name,
-            "review": request.POST.get('review'),
-            "purchase": False,
-            "purchase_date": None,
-            "car_make": None,
-            "car_model": None,
-            "car_year": None,
-            "time": datetime.utcnow().isoformat()
+            #required_fields = ['id', 'name', 'dealership', 'review', 'purchase', 'purchase_date', 'car_make', 'car_model', 'car_year']
+            review = {
+                "id": dealer_id,
+                "dealership": dealer_id,
+                "name": dealership_details[0].full_name,
+                "review": request.POST.get('review'),
+                "purchase": False,
+                "purchase_date": None,
+                "car_make": None,
+                "car_model": None,
+                "car_year": None,
+                "time": datetime.utcnow().isoformat()
             }
             # Add info about car purchase if customer purchased the car
             if request.POST.get('purchasecheck') == 'on':
-                print(all_cars_from_dealership)
-                jayson_payload['purchase'] = True
-                jayson_payload['purchase_date'] = request.POST.get('purchase_date')
-                jayson_payload['car_make'] = all_cars_from_dealership[int(request.POST.get('car'))].car_make.car_make
-                jayson_payload['car_model'] = all_cars_from_dealership[int(request.POST.get('car'))].car_model
-                jayson_payload['car_year'] = all_cars_from_dealership[int(request.POST.get('car'))].car_year
-
-
-            print("ADD REVIEW METHOD WITH POST REQUEST:")
-            print(request.POST)
-            print(jayson_payload)
-            return HttpResponse("add_review POST request")
+                review['purchase'] = True
+                review['purchase_date'] = request.POST.get('purchasedate')
+                review['car_make'] = all_cars_from_dealership[int(request.POST.get('car'))].car_make.car_make
+                review['car_model'] = all_cars_from_dealership[int(request.POST.get('car'))].car_model
+                review['car_year'] = all_cars_from_dealership[int(request.POST.get('car'))].car_year
+            
+            # Prepare payload with review details
+            json_payload = {
+                "review": review
+            }
+            # Call post review method to post the review
+            result = post_request(URL_POST_REVIEW, json_payload, id = dealer_id)
+                
+            #return HttpResponse("add_review POST request")
+            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
 
     else:
         print("User is not authenticated")  
     return HttpResponse("add_review method called. SessionID: " + str(sessionid) + "\n Result of post request: " + str(result.status_code))
-
-
-    
-    #return HttpResponse("add_review method to be implemented")
-    # Line above blocks further code execution until it is properly implemented using a submit form
-    if sessionid != None:
-        #print("User is authenticated")
-        review = {
-            "id": 1114,
-            "name": "DEBUG DEALERSHIP",
-            "dealership": dealer_id,
-            "review": "Great service! Not really, just posting test review",
-            "purchase": False,
-            "another": "field",
-            "purchase_date": "02/16/2021",
-            "car_make": "Audi",
-            "car_model": "Car",
-            "car_year": 2021,
-            "time": datetime.utcnow().isoformat()
-        }
-        # Prepare payload with review details
-        json_payload = {
-            "review": review
-        }
-        # Call post review method to post the review
-        result = post_request(URL_POST_REVIEW, json_payload, id = dealer_id)
-    else:
-        print("User is not authenticated")  
-    return HttpResponse("add_review method called. SessionID: " + str(sessionid) + "\n Result of post request: " + str(result.status_code))
-
 
 def debug(request):# DELETE ME
     return HttpResponse("Debug")
