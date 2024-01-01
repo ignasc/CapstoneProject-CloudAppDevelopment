@@ -27,22 +27,23 @@ class CarMake(models.Model):
 # - __str__ method to print a car make object
 class CarModel(models.Model):
     # Choices defined as constants
-    SEDAN = "SDN"
+    SEDAN = "SEDAN"
     SUV = "SUV"
-    WAGON = "WGN"
+    WAGON = "WAGON"
     CAR_TYPE_CHOICES = [
         (SEDAN, "SEEDAN"),
         (SUV, "SUV"),
         (WAGON, "WAGON"),
     ]
-    car_model = models.ForeignKey(CarMake, on_delete = models.CASCADE) # Many-to-one relationship - One make can have many models
+    car_make = models.ForeignKey(CarMake, on_delete = models.CASCADE) # Many-to-one relationship - One make can have many models
+    car_model = models.CharField(max_length = 10, default = 'N/A')
     dealer_name = models.CharField(max_length = 20, default = 'Not Specified')
     dealer_id = models.IntegerField()
-    car_type = models.CharField(max_length = 3, choices = CAR_TYPE_CHOICES)
+    car_type = models.CharField(max_length = 5, choices = CAR_TYPE_CHOICES)
     car_year = models.IntegerField()
     # Create a toString method for object string representation
     def __str__(self):
-        return self.car_model.car_make + " (" + self.car_type + ", " + str(self.car_year) + ")"
+        return self.car_make.car_make + self.car_model + " (" + self.car_type + ", " + str(self.car_year) + ")"
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 class CarDealer:

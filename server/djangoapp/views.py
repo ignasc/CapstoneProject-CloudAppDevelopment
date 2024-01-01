@@ -15,9 +15,9 @@ import json
 logger = logging.getLogger(__name__)
 
 # CONSTANTS
-URL_DEALER_LIST = "https://ignuic-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
-URL_DEALER_DETAILS = "https://ignuic-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews"
-URL_POST_REVIEW = "https://ignuic-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
+URL_DEALER_LIST = "https://ignuic-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+URL_DEALER_DETAILS = "https://ignuic-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews"
+URL_POST_REVIEW = "https://ignuic-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
 
 # Create your views here.
 # Create an `about` view to render a static about page
@@ -144,15 +144,22 @@ def add_review(request, dealer_id):
 
         all_car_models = CarModel.objects.all()
         print("Printing out all car models from DB")
-        print(all_car_models[0].car_model)
+        print(all_car_models)
         # NEXT STEP: generate car model list and add <select> tag in add_review.html file
+        all_cars_from_dealership = []
 
         if request.method == "GET":
+
+            for car in all_car_models:
+                if car.dealer_id == dealer_id:
+                    all_cars_from_dealership.append(car)
+            print(all_cars_from_dealership)
 
             dealership_details = get_dealer_by_id_from_cf(URL_DEALER_LIST, dealerId = dealer_id)
             context = {
             "dealer_id": dealer_id,
             "dealership_name": dealership_details[0].full_name,
+            "cars": all_cars_from_dealership,
             }
             return render(request, 'djangoapp/add_review.html', context)
 
