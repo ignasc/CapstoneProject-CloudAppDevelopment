@@ -142,20 +142,20 @@ def add_review(request, dealer_id):
 
     if sessionid != None:
 
+        dealership_details = get_dealer_by_id_from_cf(URL_DEALER_LIST, dealerId = dealer_id)
+
         all_car_models = CarModel.objects.all()
         print("Printing out all car models from DB")
         print(all_car_models)
         # NEXT STEP: generate car model list and add <select> tag in add_review.html file
         all_cars_from_dealership = []
+        # Populate car list with all cars from that dealership
+        for car in all_car_models:
+            if car.dealer_id == dealer_id:
+                all_cars_from_dealership.append(car)
 
         if request.method == "GET":
 
-            for car in all_car_models:
-                if car.dealer_id == dealer_id:
-                    all_cars_from_dealership.append(car)
-            print(all_cars_from_dealership)
-
-            dealership_details = get_dealer_by_id_from_cf(URL_DEALER_LIST, dealerId = dealer_id)
             context = {
             "dealer_id": dealer_id,
             "dealership_name": dealership_details[0].full_name,
@@ -164,6 +164,30 @@ def add_review(request, dealer_id):
             return render(request, 'djangoapp/add_review.html', context)
 
         if request.method == "POST":
+            jayson_payload = {
+            "dealer_id": dealer_id,
+            "name": dealership_details[0].full_name,
+            "review": request.POST.get('review'),
+            "purchase": False,
+            "purchase_date": None,
+            "car_make": None,
+            "car_model": None,
+            "car_year": None,
+            "time": datetime.utcnow().isoformat()
+            }
+            # Add info about car purchase if customer purchased the car
+            if request.POST.get('purchasecheck') == 'on':
+                print(all_cars_from_dealership)
+                jayson_payload['purchase'] = True
+                jayson_payload['purchase_date'] = request.POST.get('purchase_date')
+                jayson_payload['car_make'] = all_cars_from_dealership[int(request.POST.get('car'))].car_make.car_make
+                jayson_payload['car_model'] = all_cars_from_dealership[int(request.POST.get('car'))].car_model
+                jayson_payload['car_year'] = all_cars_from_dealership[int(request.POST.get('car'))].car_year
+
+
+            print("ADD REVIEW METHOD WITH POST REQUEST:")
+            print(request.POST)
+            print(jayson_payload)
             return HttpResponse("add_review POST request")
 
     else:
